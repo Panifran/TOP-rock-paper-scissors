@@ -1,7 +1,33 @@
 'use strict';
 
+const btnRock = document.querySelector('.btn-rock');
+const btnPaper = document.querySelector('.btn-paper');
+const btnScissors = document.querySelector('.btn-scissors');
+const playerBoard = document.querySelector('.player-board');
+const computerBoard = document.querySelector('.computer-board');
+const resultsBoard = document.querySelector('.results-board');
+const btnPlayAgain = document.querySelector('.btn-play-again');
+
 let userScore = 0;
 let computerScore = 0;
+
+const updateResult = function () {
+  playerBoard.textContent = `${userScore}`;
+  computerBoard.textContent = `${computerScore}`;
+};
+
+const disableButton = function () {
+  btnRock.disabled = true;
+  btnPaper.disabled = true;
+  btnScissors.disabled = true;
+}
+
+const enableButton = function () {
+  btnRock.disabled = false;
+  btnPaper.disabled = false;
+  btnScissors.disabled = false;
+};
+
 const getComputerChoice = function () {
   const randomInt = (min, max) =>
     Math.floor(Math.random() * (max - min + 1) + min);
@@ -21,43 +47,68 @@ const getComputerChoice = function () {
   return result;
 };
 
-const playerSelection = function () {
-  const choice = prompt('RPS').toLowerCase();
-  return choice;
-};
+btnRock.addEventListener('click', function () {
+  console.log('rock');
+  playRound('rock', getComputerChoice());
+  game();
+});
+
+btnPaper.addEventListener('click', function () {
+  console.log('paper');
+  playRound('paper', getComputerChoice());
+  game();
+});
+
+btnScissors.addEventListener('click', function () {
+  console.log('scissors');
+  playRound('scissors', getComputerChoice());
+  game();
+});
 
 function playRound(playerSelection, computerSelection) {
-  playerSelection = playerSelection();
-  computerSelection = getComputerChoice();
   if (
     (playerSelection === 'rock' && computerSelection === 'rock') ||
     (playerSelection === 'paper' && computerSelection === 'paper') ||
     (playerSelection === 'scissors' && computerSelection === 'scissors')
   ) {
-    return 'Draw';
-  }
-
-  if (
+    resultsBoard.textContent = 'Tie';
+  } else if (
     (playerSelection === 'rock' && computerSelection === 'scissors') ||
     (playerSelection === 'paper' && computerSelection === 'rock') ||
     (playerSelection === 'scissors' && computerSelection === 'paper')
   ) {
     userScore++;
-    return 'player wins';
+    resultsBoard.textContent = `You win! ${playerSelection} beats ${computerSelection}`;
+  } else {
+    computerScore++;
+    resultsBoard.textContent = `You lose! ${computerSelection} beats ${playerSelection}`;
+    console.log('computer wins');
   }
-  computerScore++;
-  return 'computer wins';
 }
 
-const game = function (playerSelection, getComputerChoice) {
-  while (userScore < 3 && computerScore < 3) {
-    playRound(playerSelection, getComputerChoice);
-  }
+const game = function () {
+  console.log(`user ${userScore} - computer ${computerScore}`);
+  updateResult();
   if (userScore === 3) {
-    console.log('Game over, User Wins');
-  } else {
-    console.log('Game over, Computer Wins');
+    disableButton();
+    resultsBoard.textContent = 'You Win the game!!!';
+    resultsBoard.classList.add('green');
+  }
+
+  if (computerScore === 3) {
+    disableButton();
+    resultsBoard.textContent = 'You Lost the game to a computer!';
+    resultsBoard.classList.add('red');
   }
 };
 
-game(playerSelection, getComputerChoice);
+btnPlayAgain.addEventListener('click', function() {
+  playerBoard.textContent = '';
+  computerBoard.textContent = '';
+  resultsBoard.textContent = '';
+  userScore = 0;
+  computerScore = 0;
+  enableButton();
+  resultsBoard.classList.remove('green');
+  resultsBoard.classList.remove('red');
+})
