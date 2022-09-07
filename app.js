@@ -13,7 +13,6 @@ let computerScore = 0;
 
 const updateResult = function () {
   playerBoard.textContent = `${userScore}`;
-  playerBoard.classList.add('text');
   computerBoard.textContent = `${computerScore}`;
 };
 
@@ -93,12 +92,13 @@ const game = function () {
   if (userScore === 3) {
     disableButton();
     resultsBoard.textContent = 'You Win the game!!!';
+    resultsBoard.classList.add('green');
   }
 
   if (computerScore === 3) {
-    button.disabled = true;
     disableButton();
     resultsBoard.textContent = 'You Lost the game to a computer!';
+    resultsBoard.classList.add('red');
   }
 };
 
@@ -109,4 +109,6 @@ btnPlayAgain.addEventListener('click', function() {
   userScore = 0;
   computerScore = 0;
   enableButton();
+  resultsBoard.classList.remove('green');
+  resultsBoard.classList.remove('red');
 })
